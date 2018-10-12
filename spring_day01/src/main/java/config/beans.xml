@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--配置service
+          <bean>配置所需要创建的对象
+          id是用于之后从spring容器获得实例时使用的
+          class:需要创建实例的全限定类名
+       -->
+<!--a_ioc-->
+    <bean id="UserServiceId_1" class="com.adi.user.UserServiceImpl"></bean>
+
+<!--b_di-->
+
+    <!--创建service-->
+    <bean id="BookserviceId" class="com.adi.b_di.BookServiceImpl">
+        <!--属性注入-->
+        <property name="bookDao" ref="BookDaoId"></property>
+    </bean>
+    <!--创建Dao实例-->
+    <bean id="BookDaoId" class="com.adi.b_di.BookDaoImpl"></bean>
+
+<!--c_inject_b_static_factory-->
+    <bean id="UserServiceId_2" class="com.adi.c_inject_b_static_factory.MyBeanFactory"
+          factory-method="createUser"></bean>
+
+<!--c_inject_c_factory-->
+    <!--获得工厂实例-->
+    <bean id="MyBeanFactoryID" class="com.adi.c_inject_c_factory.MyBeanFactory"></bean>
+    <!--获得userservice
+        factory-bean    确定工厂实例
+        factory-method  确定普通方法
+    -->
+    <bean id="UserServiceId_3" factory-bean="MyBeanFactoryID" factory-method="createUser"></bean>
+
+<!--d_scope-->
+    <bean id="UserServiceId_4" factory-bean="MyBeanFactoryID" factory-method="createUser" scope="prototype"></bean>
+
+<!--e_lifecycle-->
+    <!--init-method    用于配置初始化方法，准备数据等
+        destroy-method 用于配置销毁方法 ，清理资源等,
+        <bean id="UserServiceId_5" class="com.adi.e_lifecycle.UserServiceImpl" init-method="init" destroy-method="destroy" scope="prototype"></bean>
+
+    -->
+    <bean id="UserServiceId_5" class="com.adi.e_lifecycle.UserServiceImpl" init-method="init" destroy-method="destroy" scope="prototype"></bean>
+
+<!--f_xml_b_setter-->
+<bean id="personId" class="com.adi.f_xml_b_setter.Person" >
+    <property name="pname" value="mrq" ></property>
+    <property name="age" ><value>123</value></property>
+    <property name="homeaddr" ref="homeaddrId"></property>
+    <property name="companyaddr" ref="companyaddrId"></property>
+</bean>
+   <bean id="homeaddrId" class="com.adi.f_xml_b_setter.Address">
+     <property name="addr" value="天水"></property>
+     <property name="phone" value="173"></property>
+   </bean>
+    <bean id="companyaddrId" class="com.adi.f_xml_b_setter.Address">
+        <property name="addr" value="辽大"></property>
+        <property name="phone" value="138"></property>
+    </bean>
+<!--f_xml_e_coll-->
+    <!--集合的注入都是给<property> 子标签
+        数组 <array>
+        List <List>
+        Map <Map>
+        Propereties <props>  <prop key="">
+    -->
+    <bean id="collId" class="com.adi.f_xml_e_coll.CollData">
+        <property name="arrayData">
+        <array>
+            <value>DS</value>
+            <value>DZS</value>
+            <value>屌丝</value>
+            <value>屌中屌</value>
+        </array>
+    </property>
+        <property name="listData">
+            <list>
+                <value>AA</value>
+                <value>BB</value>
+                <value>CC</value>
+                <value>DD</value>
+            </list>
+        </property>
+        <property name="setData">
+            <set>
+                <value>22</value>
+                <value>44</value>
+            </set>
+
+        </property>
+        <property name="mapData">
+            <map>
+             <entry key="jack" value="rose"/>
+                <entry key="haha" >
+                    <value>ffff</value>
+                </entry>
+            </map>
+        </property>
+        <property name="propertiesData">
+            <props>
+                <prop key="高富帅">嫐</prop>
+                <prop key="白富美">嬲</prop>
+                <prop key="屌丝">挊</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

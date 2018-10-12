@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd"
+>
+    <!--1.创建目标类-->
+    <bean id="userServiceId" class="com.adi.d_aspect_a.UserServiceImpl"></bean>
+
+    <!--2创建切面类-->
+    <bean id="myAspectId1" class="com.adi.d_aspect_a.MyAspect"></bean>
+
+    <!--aop编程
+     <aop:aspect> 将切面类声明为引用，从而获得通知(方法)
+       ref 切面类引用
+
+
+    -->
+    <aop:config>
+        <aop:aspect ref="myAspectId1">
+            <aop:pointcut id="mypointcut" expression="execution(* com.adi.d_aspect_a.UserServiceImpl.*(..))"/>
+
+            <!--3.1前置通知
+                          method 通知及方法名
+                          pointcut  切入点表达式，此表达式只能被当前通知使用
+                          pointcut-ref 切入点引用 ，可以与其他通知共享通知
+                        -->
+            <aop:before method="myBefore" pointcut-ref="mypointcut"/>
+
+
+
+            <!--3.2后置通知，目标方法执行后，获得返回值
+               JoinPoint joinPoint：连接点描述
+               Object ret：returning="ret"
+            -->
+            <aop:after-returning method="myAfterReturning" returning="ret" pointcut-ref="mypointcut"/>
+
+
+
+
+            <!--3.3抛出异常-->
+            <aop:after-throwing method="myAfterThrowing" throwing="e" pointcut-ref="mypointcut"/>
+
+
+            <!--3.4最终通知-->
+            <aop:after method="myAfter" pointcut-ref="mypointcut"></aop:after>
+
+
+
+
+            <!--3.5环绕通知
+               返回值类型：Object
+               方法名：任意
+               参数：ProceedingJoinPoint
+               抛出异常
+               执行目标方法:   Object obj=pjp.proceed();
+               例如  <aop:around method="around" pointcut-ref="mypointcut"></aop:around>
+            -->
+            <aop:around method="around" pointcut-ref="mypointcut"></aop:around>
+        </aop:aspect>
+    </aop:config>
+</beans>
